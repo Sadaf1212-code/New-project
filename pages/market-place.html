@@ -1,0 +1,349 @@
+ 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Marketplace - EduTrade</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+
+<body class="bg-gray-50 min-h-screen">
+
+
+    <!-- ===================================== -->
+    <!-- NAVBAR -->
+    <!-- ===================================== -->
+
+    <div id="navbar-placeholder"></div>
+
+
+
+    <!-- ===================================== -->
+    <!-- MAIN -->
+    <!-- ===================================== -->
+
+    <main class="max-w-7xl mx-auto px-6 py-10">
+
+
+        <!-- ===================================== -->
+        <!-- HEADER -->
+        <!-- ===================================== -->
+
+        <div class="text-center mb-10">
+
+            <h1 class="text-4xl font-bold text-gray-800">
+                Student Marketplace
+            </h1>
+
+            <p class="text-gray-500 mt-3">
+                Buy, sell, rent, and find useful items from fellow students.
+            </p>
+
+        </div>
+
+
+
+        <!-- ===================================== -->
+        <!-- SEARCH -->
+        <!-- ===================================== -->
+
+        <div class="bg-white p-5 rounded-xl shadow-sm border mb-6">
+
+            <div class="relative">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search books, notes, calculators..."
+                    class="w-full border border-gray-300 rounded-lg px-4 py-3 pl-11
+                           focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+
+                <span
+                    class="absolute left-4 top-3.5 text-gray-400 text-xl"
+                >
+                    🔍
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ===================================== -->
+        <!-- FILTERS -->
+        <!-- ===================================== -->
+
+        <div class="bg-white p-5 rounded-xl shadow-sm border mb-8">
+
+
+            <!-- LISTING TYPE -->
+
+            <div class="mb-5">
+
+                <h3 class="text-sm font-semibold text-gray-700 mb-3">
+                    Listing Type
+                </h3>
+
+
+                <div class="flex flex-wrap gap-2">
+
+
+                    <button
+                        type="button"
+                        class="filter-btn active-filter"
+                        data-type="All"
+                    >
+                        All
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="filter-btn"
+                        data-type="Sell"
+                    >
+                        Sell
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="filter-btn"
+                        data-type="Rent"
+                    >
+                        Rent
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="filter-btn"
+                        data-type="Lost"
+                    >
+                        Lost
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="filter-btn"
+                        data-type="Found"
+                    >
+                        Found
+                    </button>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ===================================== -->
+            <!-- CATEGORY + SORT -->
+            <!-- ===================================== -->
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+
+                <!-- CATEGORY -->
+
+                <div>
+
+                    <label
+                        for="categoryFilter"
+                        class="block text-sm font-semibold text-gray-700 mb-2"
+                    >
+                        Category
+                    </label>
+
+
+                    <select
+                        id="categoryFilter"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-3
+                               focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+
+                        <option value="All">
+                            All Categories
+                        </option>
+
+                        <option value="Books">
+                            Books
+                        </option>
+
+                        <option value="Notes">
+                            Notes
+                        </option>
+
+                        <option value="Electronics">
+                            Electronics
+                        </option>
+
+                        <option value="Lab Equipment">
+                            Lab Equipment
+                        </option>
+
+                        <option value="Calculators">
+                            Calculators
+                        </option>
+
+                        <option value="Project Materials">
+                            Project Materials
+                        </option>
+
+                        <option value="Others">
+                            Others
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- SORT -->
+
+                <div>
+
+                    <label
+                        for="sortFilter"
+                        class="block text-sm font-semibold text-gray-700 mb-2"
+                    >
+                        Sort By
+                    </label>
+
+
+                    <select
+                        id="sortFilter"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-3
+                               focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+
+                        <option value="newest">
+                            Newest First
+                        </option>
+
+                        <option value="oldest">
+                            Oldest First
+                        </option>
+
+                        <option value="lowPrice">
+                            Price: Low to High
+                        </option>
+
+                        <option value="highPrice">
+                            Price: High to Low
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ===================================== -->
+        <!-- RESULT INFO -->
+        <!-- ===================================== -->
+
+        <div class="flex justify-between items-center mb-5">
+
+
+            <h2
+                id="resultTitle"
+                class="text-xl font-semibold text-gray-800"
+            >
+                All Posts
+            </h2>
+
+
+            <span
+                id="postCount"
+                class="text-sm text-gray-500"
+            >
+                0 posts
+            </span>
+
+
+        </div>
+
+
+
+        <!-- ===================================== -->
+        <!-- POSTS -->
+        <!-- ===================================== -->
+
+        <div
+            id="marketplacePosts"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+        </div>
+
+
+
+        <!-- ===================================== -->
+        <!-- EMPTY MESSAGE -->
+        <!-- ===================================== -->
+
+        <div
+            id="emptyMessage"
+            class="hidden text-center bg-white border rounded-xl p-12"
+        >
+
+
+            <div class="text-5xl mb-4">
+                📭
+            </div>
+
+
+            <h3 class="text-xl font-semibold text-gray-700">
+                No Posts Found
+            </h3>
+
+
+            <p class="text-gray-500 mt-2">
+                Try another search or filter.
+            </p>
+
+
+        </div>
+
+
+    </main>
+
+
+
+    <!-- ===================================== -->
+    <!-- JAVASCRIPT -->
+    <!-- ===================================== -->
+
+   <div id="footer-placeholder"></div>
+
+    <script src="../js/market-place.js"></script>
+      <script src="../js/navbar.js"></script>
+      <script src="../js/footer.js"></script>
+
+
+</body>
+
+</html>
+ 

@@ -1,0 +1,176 @@
+ 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Wishlist - EduTrade</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+
+<body class="bg-gray-50 text-gray-800 min-h-screen">
+
+
+    <!-- ============================= -->
+    <!-- NAVBAR -->
+    <!-- ============================= -->
+
+    <div id="navbar-placeholder"></div>
+
+
+
+    <!-- ============================= -->
+    <!-- MAIN CONTENT -->
+    <!-- ============================= -->
+
+    <main class="max-w-7xl mx-auto px-6 py-10">
+
+
+        <!-- ============================= -->
+        <!-- PAGE HEADER -->
+        <!-- ============================= -->
+
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+
+            <div>
+
+                <h1 class="text-3xl font-bold text-gray-800">
+                    My Wishlist ❤️
+                </h1>
+
+                <p class="text-gray-500 mt-2">
+                    Save the items you are interested in.
+                </p>
+
+            </div>
+
+
+            <!-- Wishlist Count -->
+
+            <div
+                class="mt-4 md:mt-0 bg-white border rounded-xl px-5 py-3 shadow-sm">
+
+                <span class="text-gray-500 text-sm">
+                    Wishlist Items
+                </span>
+
+                <span
+                    id="wishlistCount"
+                    class="ml-2 text-blue-600 font-bold">
+                    0
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ============================= -->
+        <!-- WISHLIST CONTAINER -->
+        <!-- ============================= -->
+
+        <div
+            id="wishlistContainer"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        </div>
+
+
+
+        <!-- ============================= -->
+        <!-- EMPTY WISHLIST -->
+        <!-- ============================= -->
+
+        <div
+            id="emptyWishlist"
+            class="hidden text-center bg-white border rounded-xl p-12">
+
+            <div class="text-6xl mb-5">
+                ❤️
+            </div>
+
+
+            <h2 class="text-2xl font-bold text-gray-700">
+                Your Wishlist is Empty
+            </h2>
+
+
+            <p class="text-gray-500 mt-2 max-w-md mx-auto">
+                You haven't added any items to your wishlist yet.
+                Browse the marketplace and save items you like.
+            </p>
+
+
+            <a
+                href="marketplace.html"
+                class="inline-block mt-6 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition">
+
+                Browse Marketplace
+
+            </a>
+
+        </div>
+
+
+
+        <!-- ============================= -->
+        <!-- ERROR MESSAGE -->
+        <!-- ============================= -->
+
+        <div
+            id="errorMessage"
+            class="hidden text-center bg-red-50 border border-red-200 rounded-xl p-8">
+
+            <div class="text-4xl mb-3">
+                ⚠️
+            </div>
+
+
+            <h2 class="text-xl font-semibold text-red-700">
+                Unable to Load Wishlist
+            </h2>
+
+
+            <p
+                id="errorText"
+                class="text-red-500 mt-2">
+            </p>
+
+
+            <button
+                onclick="loadWishlist()"
+                class="mt-5 bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-lg">
+
+                Try Again
+
+            </button>
+
+        </div>
+
+    </main>
+
+
+     <div id="footer-placeholder"></div>
+    <!-- ============================= -->
+    <!-- JAVASCRIPT -->
+    <!-- ============================= -->
+
+    <script src="../js/wishlist.js"></script>
+
+    <script src="../js/navbar.js"></script>
+    <script src="../js/footer.js"></script>
+
+
+</body>
+
+</html>
+ 

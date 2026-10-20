@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>EduTrade - Create Post</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="min-h-screen bg-[#f7f8fa] text-[#172033]">
+
+    <div id="navbar-placeholder"></div>
+
+    <div
+        class="mx-auto mt-8 max-w-2xl rounded-2xl border border-gray-100 bg-white p-6 shadow-lg sm:p-10">
+
+        <div class="mb-8 text-center">
+
+            <h1 class="text-3xl font-extrabold text-blue-600">
+                Create Post
+            </h1>
+
+            <p class="mt-1 text-sm text-gray-500">
+                Sell, Rent, Lost or Found an item on EduTrade
+            </p>
+
+        </div>
+
+        <form id="createPostForm" class="space-y-6">
+
+            <div>
+
+                <label
+                    for="title"
+                    class="mb-1 block text-sm font-semibold text-gray-700">
+
+                    Item Title
+                    <span class="text-red-500">*</span>
+
+                </label>
+
+                <input
+                    type="text"
+                    id="title"
+                    placeholder="e.g. Engineering Mathematics Book"
+                    required
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
+
+            </div>
+
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                <div>
+
+                    <label
+                        for="listingType"
+                        class="mb-1 block text-sm font-semibold text-gray-700">
+
+                        I want to
+                        <span class="text-red-500">*</span>
+
+                    </label>
+
+                    <select
+                        id="listingType"
+                        required
+                        class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
+
+                        <option value="" disabled selected>
+                            Select Type
+                        </option>
+
+                        <option value="Sell">
+                            Sell
+                        </option>
+
+                        <option value="Rent">
+                            Rent
+                        </option>
+
+                        <option value="Lost">
+                            Lost
+                        </option>
+
+                        <option value="Found">
+                            Found
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div>
+
+                    <label
+                        for="category"
+                        class="mb-1 block text-sm font-semibold text-gray-700">
+
+                        Category
+                        <span class="text-red-500">*</span>
+
+                    </label>
+
+                    <select
+                        id="category"
+                        required
+                        class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
+
+                        <option value="" disabled selected>
+                            Select Category
+                        </option>
+
+                        <option value="Books">
+                            Books & Reference
+                        </option>
+
+                        <option value="Notes">
+                            Notes & Guides
+                        </option>
+
+                        <option value="Electronics">
+                            Electronic Components
+                        </option>
+
+                        <option value="Lab Equipment">
+                            Lab Equipment
+                        </option>
+
+                        <option value="Calculators">
+                            Calculators
+                        </option>
+
+                        <option value="Project Materials">
+                            Project Materials
+                        </option>
+
+                        <option value="Others">
+                            Others
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                <div>
+
+                    <label
+                        for="price"
+                        class="mb-1 block text-sm font-semibold text-gray-700">
+
+                        Price (BDT)
+
+                    </label>
+
+                    <input
+                        type="number"
+                        id="price"
+                        placeholder="e.g. 250"
+                        min="0"
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
+
+                    <p class="mt-1 text-xs text-gray-400">
+                        Not required for Lost / Found
+                    </p>
+
+                </div>
+
+                <div>
+
+                    <label
+                        for="condition"
+                        class="mb-1 block text-sm font-semibold text-gray-700">
+
+                        Condition
+                        <span class="text-red-500">*</span>
+
+                    </label>
+
+                    <select
+                        id="condition"
+                        required
+                        class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
+
+                        <option value="New">
+                            Brand New
+                        </option>
+
+                        <option value="Like New">
+                            Like New
+                        </option>
+
+                        <option value="Used">
+                            Used / Good
+                        </option>
+
+                        <option value="Unknown">
+                            Unknown
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                <div>
+
+                    <label
+                        for="contact"
+                        class="mb-1 block text-sm font-semibold text-gray-700">
+
+                        Contact Number
+                        <span class="text-red-500">*</span>
+
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="contact"
+                        placeholder="01XXXXXXXXX"
+                        required
+                        class="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2.5 outline-none">
+
+                </div>
+
+                <div>
+
+                    <label
+                        for="location"
+                        class="mb-1 block text-sm font-semibold text-gray-700">
+
+                        Campus / Location
+                        <span class="text-red-500">*</span>
+
+                    </label>
+
+                    <input
+                        type="text"
+                        id="location"
+                        placeholder="e.g. Main Campus / Library"
+                        required
+                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
+
+                </div>
+
+            </div>
+
+            <div>
+
+                <label
+                    for="description"
+                    class="mb-1 block text-sm font-semibold text-gray-700">
+
+                    Description
+                    <span class="text-red-500">*</span>
+
+                </label>
+
+                <textarea
+                    id="description"
+                    rows="4"
+                    placeholder="Write details about your item..."
+                    required
+                    class="w-full resize-y rounded-lg border border-gray-300 px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"></textarea>
+
+            </div>
+
+            <div>
+
+                <label
+                    for="productImage"
+                    class="mb-1 block text-sm font-semibold text-gray-700">
+
+                    Product Image URL
+
+                </label>
+
+                <input
+                    type="url"
+                    id="productImage"
+                    placeholder="https://example.com/product.jpg"
+                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
+
+                <p class="mt-1 text-xs text-gray-400">
+                    Paste a direct image URL. Optional.
+                </p>
+
+            </div>
+
+            <button
+                type="submit"
+                class="w-full rounded-lg bg-blue-600 py-3 font-bold text-white shadow-md transition hover:bg-blue-700">
+
+                Publish Post
+
+            </button>
+
+        </form>
+
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="../js/create-post.js"></script>
+    <script src="../js/navbar.js"></script>
+    <script src="../js/footer.js"></script>
+
+</body>
+
+</html>

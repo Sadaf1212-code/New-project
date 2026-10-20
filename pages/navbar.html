@@ -1,0 +1,236 @@
+ 
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>EduTrade Navbar</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+
+    <!-- ============================= -->
+    <!-- NAVBAR -->
+    <!-- ============================= -->
+
+    <nav class="bg-white border-b border-gray-200 shadow-sm">
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <div class="flex items-center justify-between h-16">
+
+              
+
+             <div class="flex items-center">
+    <a href="index.html" class="flex items-center gap-2">
+
+        <img
+            src="../images/eduTradeLogo.jpeg"
+            alt="EduTrade Logo"
+            class="w-10 h-10 object-contain rounded-lg"
+        >
+
+        <span class="text-2xl font-bold text-green-600">
+            EduTrade
+        </span>
+
+    </a>
+</div>
+
+
+                <!-- ============================= -->
+                <!-- DESKTOP MENU -->
+                <!-- ============================= -->
+
+                <div class="hidden md:flex items-center gap-6">
+
+                    <a
+                        href="market-place.html"
+                        class="text-gray-700 hover:text-green-600
+                        font-medium transition"
+                    >
+                        Marketplace
+                    </a>
+
+                    <a
+                        href="create-post.html"
+                        class="text-gray-700 hover:text-green-600
+                        font-medium transition"
+                    >
+                        Create Post
+                    </a>
+
+                    <a
+                        href="my-posts.html"
+                        class="text-gray-700 hover:text-green-600
+                        font-medium transition"
+                    >
+                        My Posts
+                    </a>
+
+                    <!-- Wishlist -->
+
+                    <a
+                        href="wishlist.html"
+                        class="relative text-gray-700
+                        hover:text-green-600 font-medium transition"
+                    >
+
+                        Wishlist
+
+                        <span
+                            id="wishlistCount"
+                            class="hidden absolute -top-3 -right-4
+                            min-w-[20px] h-5 px-1
+                            rounded-full bg-red-500
+                            text-white text-xs
+                            flex items-center justify-center"
+                        >
+                            0
+                        </span>
+
+                    </a>
+
+                </div>
+
+
+                <!-- ============================= -->
+                <!-- DESKTOP AUTH -->
+                <!-- ============================= -->
+
+                <div
+                    id="authSection"
+                    class="hidden md:flex items-center gap-4"
+                >
+
+                    <!-- navbar.js will insert Login/Register
+                         or Profile/Logout here -->
+
+                </div>
+
+
+                <!-- ============================= -->
+                <!-- MOBILE MENU BUTTON -->
+                <!-- ============================= -->
+
+                <button
+                    id="mobile-menu-btn"
+                    type="button"
+                    class="md:hidden inline-flex items-center
+                    justify-center p-2 rounded-lg
+                    text-gray-600 hover:bg-gray-100
+                    focus:outline-none"
+                    aria-label="Open menu"
+                    aria-expanded="false"
+                >
+
+                    <svg
+                        class="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"
+                        />
+
+                    </svg>
+
+                </button>
+
+            </div>
+
+
+            <!-- ============================= -->
+            <!-- MOBILE MENU -->
+            <!-- ============================= -->
+
+            <div
+                id="mobile-menu"
+                class="hidden md:hidden border-t border-gray-100 py-4"
+            >
+
+                <div class="flex flex-col gap-2">
+
+                    <a
+                        href="marketplace.html"
+                        class="mobile-nav-link px-3 py-2 rounded-lg
+                        text-gray-700 hover:bg-green-50
+                        hover:text-green-600"
+                    >
+                        Marketplace
+                    </a>
+
+                    <a
+                        href="create-post.html"
+                        class="mobile-nav-link px-3 py-2 rounded-lg
+                        text-gray-700 hover:bg-green-50
+                        hover:text-green-600"
+                    >
+                        Create Post
+                    </a>
+
+                    <a
+                        href="my-posts.html"
+                        class="mobile-nav-link px-3 py-2 rounded-lg
+                        text-gray-700 hover:bg-green-50
+                        hover:text-green-600"
+                    >
+                        My Posts
+                    </a>
+
+                    <a
+                        href="wishlist.html"
+                        class="mobile-nav-link px-3 py-2 rounded-lg
+                        text-gray-700 hover:bg-green-50
+                        hover:text-green-600"
+                    >
+
+                        Wishlist
+
+                        <span
+                            id="mobileWishlistCount"
+                            class="hidden ml-1 px-2 py-0.5
+                            rounded-full bg-red-500
+                            text-white text-xs"
+                        >
+                            0
+                        </span>
+
+                    </a>
+
+
+                    <!-- Mobile Auth -->
+
+                    <div
+                        id="mobileAuthSection"
+                        class="flex flex-col gap-2
+                        border-t border-gray-100
+                        mt-2 pt-2"
+                    >
+
+                        <!-- navbar.js will insert
+                             Login/Register or Profile/Logout -->
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+</body>
+
+</html>
+ 

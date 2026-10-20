@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Posts - EduTrade</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+
+    <!-- ============================= -->
+    <!-- NAVBAR -->
+    <!-- ============================= -->
+
+    <div id="navbar-placeholder"></div>
+
+
+    <!-- ============================= -->
+    <!-- MAIN CONTENT -->
+    <!-- ============================= -->
+
+    <main class="max-w-7xl mx-auto px-6 py-10">
+
+        <!-- PAGE HEADER -->
+
+        <div class="mb-8">
+
+            <h1 class="text-3xl font-bold text-gray-800">
+                My Posts
+            </h1>
+
+            <p class="text-gray-500 mt-2">
+                Manage all the posts you have created.
+            </p>
+
+        </div>
+
+
+        <!-- ============================= -->
+        <!-- STATS -->
+        <!-- ============================= -->
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+
+            <!-- TOTAL POSTS -->
+
+            <div class="bg-white rounded-xl shadow-sm p-6 border">
+
+                <p class="text-gray-500 text-sm">
+                    Total Posts
+                </p>
+
+                <h2
+                    id="totalPosts"
+                    class="text-3xl font-bold text-blue-600 mt-2"
+                >
+                    0
+                </h2>
+
+            </div>
+
+
+            <!-- SELL POSTS -->
+
+            <div class="bg-white rounded-xl shadow-sm p-6 border">
+
+                <p class="text-gray-500 text-sm">
+                    Sell Posts
+                </p>
+
+                <h2
+                    id="sellPosts"
+                    class="text-3xl font-bold text-green-600 mt-2"
+                >
+                    0
+                </h2>
+
+            </div>
+
+
+            <!-- LOST / FOUND -->
+
+            <div class="bg-white rounded-xl shadow-sm p-6 border">
+
+                <p class="text-gray-500 text-sm">
+                    Lost / Found
+                </p>
+
+                <h2
+                    id="lostFoundPosts"
+                    class="text-3xl font-bold text-orange-600 mt-2"
+                >
+                    0
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <!-- ============================= -->
+        <!-- POSTS HEADER -->
+        <!-- ============================= -->
+
+        <div class="flex justify-between items-center mb-5">
+
+            <h2 class="text-xl font-semibold text-gray-800">
+                Your Posts
+            </h2>
+
+            <a
+                href="create-post.html"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg font-medium transition"
+            >
+                + Create Post
+            </a>
+
+        </div>
+
+
+        <!-- ============================= -->
+        <!-- POSTS CONTAINER -->
+        <!-- ============================= -->
+
+        <div
+            id="myPosts"
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+        </div>
+
+
+        <!-- ============================= -->
+        <!-- EMPTY MESSAGE -->
+        <!-- ============================= -->
+
+        <div
+            id="emptyMessage"
+            class="hidden text-center bg-white border rounded-xl p-12"
+        >
+
+            <div class="text-5xl mb-4">
+                📭
+            </div>
+
+            <h3 class="text-xl font-semibold text-gray-700">
+                No Posts Yet
+            </h3>
+
+            <p class="text-gray-500 mt-2">
+                You haven't created any post yet.
+            </p>
+
+            <a
+                href="create-post.html"
+                class="inline-block mt-5 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg"
+            >
+                Create Your First Post
+            </a>
+
+        </div>
+
+    </main>
+
+        <div id="footer-placeholder"></div>
+    <!-- ============================= -->
+    <!-- JAVASCRIPT -->
+    <!-- ============================= -->
+
+    <script src="../js/my-posts.js"></script>
+    <script src="../js/navbar.js"></script>
+    <script src="../js/footer.js"></script>
+
+</body>
+
+</html>

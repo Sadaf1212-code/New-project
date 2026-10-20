@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Create an account - EduTrade</title>
+   <link rel="stylesheet" href="/css/style.css">
+   <script src="/js/script.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="bg-gray-100 text-gray-900 font-sans">
+
+    <div id="navbar-placeholder"></div>
+
+    <main class="flex justify-center px-4 py-12 sm:py-16">
+
+        <div class="w-full max-w-2xl bg-white rounded-2xl shadow-md p-8 sm:p-11">
+
+            <p class="text-center text-sm text-gray-500 mb-1">
+                Join EduTrade
+            </p>
+
+            <h1
+                class="text-center text-2xl sm:text-[26px] font-bold text-gray-900 mb-2">
+                Create an account
+            </h1>
+
+            <p
+                class="text-center text-sm text-gray-500 leading-relaxed mb-8">
+                Buy, sell, and rent educational resources with other students.
+            </p>
+
+            <form
+                id="registerForm"
+                novalidate
+                class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-5">
+
+                <div
+                    class="field sm:col-span-2 flex flex-col gap-1.5"
+                    data-field>
+
+                    <label
+                        for="fullName"
+                        class="text-sm font-semibold text-gray-800">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="fullName"
+                        name="fullName"
+                        placeholder="Enter your full name"
+                        required
+                        class="input w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:border-gray-900 focus:ring-4 focus:ring-gray-900/10 transition">
+
+                </div>
+
+                <div
+                    class="field sm:col-span-2 flex flex-col gap-1.5"
+                    data-field>
+
+                    <label
+                        for="email"
+                        class="text-sm font-semibold text-gray-800">
+                        Email address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="towsif@gmail.com"
+                        required
+                        class="input w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:border-gray-900 focus:ring-4 focus:ring-gray-900/10 transition">
+
+                </div>
+
+                <div
+                    class="field flex flex-col gap-1.5"
+                    data-field>
+
+                    <label
+                        for="studentId"
+                        class="text-sm font-semibold text-gray-800">
+                        Student ID
+                    </label>
+
+                    <input
+                        type="text"
+                        id="studentId"
+                        name="studentId"
+                        placeholder="02225100........"
+                        required
+                        class="input w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:border-gray-900 focus:ring-4 focus:ring-gray-900/10 transition">
+
+                </div>
+
+                <div
+                    class="field flex flex-col gap-1.5"
+                    data-field>
+
+                    <label
+                        for="phone"
+                        class="text-sm font-semibold text-gray-800">
+                        Phone number
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        placeholder="018*********"
+                        required
+                        class="input w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:border-gray-900 focus:ring-4 focus:ring-gray-900/10 transition">
+
+                </div>
+
+                <div
+                    class="field flex flex-col gap-1.5"
+                    data-field>
+
+                    <label
+                        for="university"
+                        class="text-sm font-semibold text-gray-800">
+                        University
+                    </label>
+
+                    <input
+                        type="text"
+                        id="university"
+                        name="university"
+                        placeholder="Premier University"
+                        required
+                        class="input w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:border-gray-900 focus:ring-4 focus:ring-gray-900/10 transition">
+
+                </div>
+
+                <div
+                    class="field flex flex-col gap-1.5"
+                    data-field>
+
+                    <label
+                        for="department"
+                        class="text-sm font-semibold text-gray-800">
+                        Department
+                    </label>
+
+                    <input
+                        type="text"
+                        id="department"
+                        name="department"
+                        placeholder="e.g. CSE"
+                        required
+                        class="input w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:border-gray-900 focus:ring-4 focus:ring-gray-900/10 transition">
+
+                </div>
+
+                <div
+                    class="field flex flex-col gap-1.5"
+                    data-field>
+
+                    <label
+                        for="password"
+                        class="text-sm font-semibold text-gray-800">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Create a password"
+                        required
+                        class="input w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:border-gray-900 focus:ring-4 focus:ring-gray-900/10 transition">
+
+                    <p class="hint text-xs text-gray-400">
+                        At least 8 characters
+                    </p>
+
+                </div>
+
+                <div
+                    class="field flex flex-col gap-1.5"
+                    data-field>
+
+                    <label
+                        for="confirmPassword"
+                        class="text-sm font-semibold text-gray-800">
+                        Confirm password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        placeholder="Re-enter your password"
+                        required
+                        class="input w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:border-gray-900 focus:ring-4 focus:ring-gray-900/10 transition">
+
+                </div>
+
+                <div
+                    class="field sm:col-span-2 flex flex-col gap-1.5"
+                    data-field>
+
+                    <label
+                        for="profileImage"
+                        class="text-sm font-semibold text-gray-800">
+                        Profile Image URL
+                    </label>
+
+                    <input
+                        type="url"
+                        id="profileImage"
+                        name="profileImage"
+                        placeholder="https://example.com/profile.jpg"
+                        class="input w-full px-3.5 py-2.5 text-sm border border-gray-300 rounded-lg outline-none focus:border-gray-900 focus:ring-4 focus:ring-gray-900/10 transition">
+
+                    <p class="text-xs text-gray-400">
+                        Paste a direct image URL.
+                    </p>
+
+                </div>
+
+                <div class="sm:col-span-2 flex items-center gap-2">
+
+                    <input
+                        type="checkbox"
+                        id="terms"
+                        name="terms"
+                        class="w-4 h-4">
+
+                    <label
+                        for="terms"
+                        class="text-sm text-gray-600">
+                        I agree to the Terms and Privacy Policy
+                    </label>
+
+                </div>
+
+                <div class="sm:col-span-2">
+
+                    <button
+                        type="submit"
+                        class="w-full mt-2 py-3 bg-gray-900 hover:bg-gray-800 text-white text-[15px] font-semibold rounded-lg transition">
+
+                        Create account
+
+                    </button>
+
+                </div>
+
+                <p
+                    class="sm:col-span-2 text-center text-sm text-gray-600">
+
+                    Already have an account?
+
+                    <a
+                        href="login.html"
+                        class="font-semibold text-gray-900 underline">
+                        Log in
+                    </a>
+
+                </p>
+
+            </form>
+
+        </div>
+
+    </main>
+
+    <script src="../js/register.js"></script>
+    <script src="../js/navbar.js"></script>
+
+</body>
+
+</html>
