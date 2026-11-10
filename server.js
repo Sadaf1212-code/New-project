@@ -11,6 +11,13 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const TOKEN_TTL_SECONDS = 60 * 60 * 24 * 7;
 
+class ValidationError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "ValidationError";
+    }
+}
+
 function loadAuthSecret() {
     if (process.env.AUTH_SECRET) return process.env.AUTH_SECRET;
     if (process.env.NODE_ENV === "production") throw new Error("AUTH_SECRET is required in production");
@@ -120,16 +127,16 @@ function requireSelf(req, res, next) {
 }
 
 function cleanText(value, field, maxLength, required = true) {
-    if (typeof value !== "string") throw new Error(field + " must be text");
+    if (typeof value !== "string") throw new ValidationError(field + " must be text");
     const clean = value.trim();
     if ((required && !clean) || clean.length > maxLength || /[\u0000-\u001f\u007f]/.test(clean)) {
-        throw new Error(field + " is invalid");
+        throw new ValidationError(field + " is invalid");
     }
     return clean;
 }
 
 function validateRegistration(body) {
-    if (!body || typeof body !== "object" || Array.isArray(body)) throw new Error("Invalid request body");
+    if (!body || typeof body !== "object" || Array.isArray(body)) throw new ValidationError("Invalid request body");
     const user = {
         fullName: cleanText(body.fullName, "Full name", 100),
         email: cleanText(body.email, "Email", 254).toLowerCase(),
@@ -139,13 +146,13 @@ function validateRegistration(body) {
         department: cleanText(body.department, "Department", 120),
         profileImage: body.profileImage ? cleanText(body.profileImage, "Profile image", 2048, false) : ""
     };
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(user.email)) throw new Error("Please enter a valid email address");
-    if (user.profileImage && !/^https:\/\//i.test(user.profileImage)) throw new Error("Profile image must be an HTTPS URL");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(user.email)) throw new ValidationError("Please enter a valid email address");
+    if (user.profileImage && !/^https:\/\//i.test(user.profileImage)) throw new ValidationError("Profile image must be an HTTPS URL");
     if (typeof body.password !== "string" || body.password.length < 8 || body.password.length > 128) {
-        throw new Error("Password must be between 8 and 128 characters");
+        throw new ValidationError("Password must be between 8 and 128 characters");
     }
-    if (body.password !== body.confirmPassword) throw new Error("Passwords do not match");
-    if (body.agree !== true) throw new Error("You must agree to the Terms and Privacy Policy");
+    if (body.password !== body.confirmPassword) throw new ValidationError("Passwords do not match");
+    if (body.agree !== true) throw new ValidationError("You must agree to the Terms and Privacy Policy");
     return { ...user, password: body.password };
 }
 
@@ -172,7 +179,7 @@ app.post("/api/users", async (req, res, next) => {
         res.status(201).json({ success: true, message: "Account created successfully", user: publicUser(created) });
     } catch (error) {
         if (error.code === "23505") return res.status(409).json({ success: false, message: "Email or Student ID is already registered" });
-        if (error instanceof TypeError || /invalid|required|Passwords|agree|valid|between/i.test(error.message || "")) {
+        if (error instanceof ValidationError) {
             return res.status(400).json({ success: false, message: error.message });
         }
         next(error);
@@ -214,7 +221,7 @@ app.put("/api/users/:id", authenticate, requireSelf, async (req, res, next) => {
         if (!updated) return res.status(404).json({ success: false, message: "User not found" });
         res.json({ success: true, message: "Profile updated successfully", user: publicUser(updated) });
     } catch (error) {
-        if (error instanceof TypeError || /is invalid/i.test(error.message || "")) {
+        if (error instanceof ValidationError) {
             return res.status(400).json({ success: false, message: error.message });
         }
         next(error);
@@ -247,17 +254,17 @@ app.post("/api/login", async (req, res, next) => {
 });
 
 function validateListing(body, updating, existing) {
-    if (!body || typeof body !== "object" || Array.isArray(body)) throw new Error("Invalid request body");
+    if (!body || typeof body !== "object" || Array.isArray(body)) throw new ValidationError("Invalid request body");
     const allowed = new Set([
         "title", "listingType", "category", "price", "condition",
         "contact", "location", "description", "image", "components"
     ]);
-    if (Object.keys(body).some(key => !allowed.has(key))) throw new Error("Unsupported listing field");
+    if (Object.keys(body).some(key => !allowed.has(key))) throw new ValidationError("Unsupported listing field");
     const data = {};
     for (const [field, limit] of [["title", 120], ["contact", 32], ["location", 120], ["description", 3000], ["components", 2000]]) {
         if (Object.hasOwn(body, field)) data[field] = cleanText(body[field], field, limit, field !== "components");
         else if (!updating && field === "components") data[field] = "";
-        else if (!updating) throw new Error(field + " is required");
+        else if (!updating) throw new ValidationError(field + " is required");
     }
 
     const choices = {
@@ -268,32 +275,32 @@ function validateListing(body, updating, existing) {
     for (const [field, allowedValues] of Object.entries(choices)) {
         if (Object.hasOwn(body, field)) {
             const value = cleanText(body[field], field, 40);
-            if (!allowedValues.includes(value)) throw new Error(field + " is invalid");
+            if (!allowedValues.includes(value)) throw new ValidationError(field + " is invalid");
             data[field] = value;
         } else if (!updating) {
-            throw new Error(field + " is required");
+            throw new ValidationError(field + " is required");
         }
     }
 
     if (Object.hasOwn(body, "price")) {
         const price = typeof body.price === "number" ? body.price :
             (typeof body.price === "string" && body.price.trim() ? Number(body.price) : NaN);
-        if (!Number.isFinite(price) || price < 0 || price > 100000000) throw new Error("Price is invalid");
+        if (!Number.isFinite(price) || price < 0 || price > 100000000) throw new ValidationError("Price is invalid");
         data.price = price;
     } else if (!updating) {
         data.price = 0;
     }
     if (Object.hasOwn(body, "image")) data.image = cleanText(body.image, "image", 2048, false);
     else if (!updating) data.image = "";
-    if (data.image && !/^https:\/\//i.test(data.image)) throw new Error("Image must be an HTTPS URL");
+    if (data.image && !/^https:\/\//i.test(data.image)) throw new ValidationError("Image must be an HTTPS URL");
 
     const merged = { ...existing, ...data };
     if (merged.listingType === "Project") {
-        if (!merged.description) throw new Error("Project description is required");
-        if (!merged.components) throw new Error("Please list the project components");
-        if (!merged.image) throw new Error("A project photo is required");
-        if (!updating && !Object.hasOwn(body, "price")) throw new Error("Project price is required");
-        if (updating && data.price === undefined && existing?.price === undefined) throw new Error("Project price is required");
+        if (!merged.description) throw new ValidationError("Project description is required");
+        if (!merged.components) throw new ValidationError("Please list the project components");
+        if (!merged.image) throw new ValidationError("A project photo is required");
+        if (!updating && !Object.hasOwn(body, "price")) throw new ValidationError("Project price is required");
+        if (updating && data.price === undefined && existing?.price === undefined) throw new ValidationError("Project price is required");
     }
     return data;
 }
@@ -362,7 +369,7 @@ app.post("/api/posts", authenticate, async (req, res, next) => {
         const post = await loadPost(created.id);
         res.status(201).json({ success: true, message: "Post created successfully", post });
     } catch (error) {
-        if (error instanceof TypeError || /invalid|required|Please list|photo|Unsupported listing field/i.test(error.message || "")) {
+        if (error instanceof ValidationError) {
             return res.status(400).json({ success: false, message: error.message });
         }
         next(error);
@@ -389,7 +396,7 @@ app.put("/api/posts/:id", authenticate, authenticateListingOwner, async (req, re
         const post = await loadPost(Number(req.params.id));
         res.json({ success: true, message: "Post updated successfully", post });
     } catch (error) {
-        if (error instanceof TypeError || /invalid|required|Please list|photo|Unsupported listing field/i.test(error.message || "")) {
+        if (error instanceof ValidationError) {
             return res.status(400).json({ success: false, message: error.message });
         }
         next(error);
