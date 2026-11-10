@@ -160,6 +160,7 @@ function initializeNavbar() {
         const logout = () => {
 
             localStorage.removeItem("currentUser");
+            localStorage.removeItem("authToken");
 
             window.location.href = "login.html";
 

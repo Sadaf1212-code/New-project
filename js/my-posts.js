@@ -316,6 +316,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         }
 
+        else if (post.listingType === "Project") {
+
+            badgeClass =
+                "bg-indigo-100 text-indigo-700";
+
+        }
+
 
         // =================================
         // PRICE
@@ -326,7 +333,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (
             post.listingType === "Sell" ||
-            post.listingType === "Rent"
+            post.listingType === "Rent" ||
+            post.listingType === "Project"
         ) {
 
             priceHTML = `
@@ -649,14 +657,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         method: "DELETE",
 
                         headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-
-                        body: JSON.stringify({
-                            userId:
-                                currentUser.id
-                        })
+                            "Authorization":
+                                `Bearer ${localStorage.getItem("authToken") || ""}`
+                        }
                     }
                 );
 

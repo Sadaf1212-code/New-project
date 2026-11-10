@@ -1,36 +1,101 @@
  
 const express = require("express");
 const path = require("path");
+const fs = require("fs");
 const crypto = require("crypto");
+const { hashPassword, verifyPassword } = require("./auth-service");
 require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+function loadAuthSecret() {
+    if (process.env.AUTH_SECRET) return process.env.AUTH_SECRET;
+    if (process.env.NODE_ENV === "production") {
+        throw new Error("Set AUTH_SECRET to a random secret of at least 32 characters in production");
+    }
+
+    const secretPath = path.join(__dirname, ".auth-secret");
+    try {
+        const savedSecret = fs.readFileSync(secretPath, "utf8").trim();
+        if (savedSecret.length >= 32) return savedSecret;
+    } catch (error) {
+        if (error.code !== "ENOENT") throw error;
+    }
+
+    const generatedSecret = crypto.randomBytes(48).toString("base64url");
+    try {
+        fs.writeFileSync(secretPath, `${generatedSecret}\n`, { mode: 0o600, flag: "wx" });
+        return generatedSecret;
+    } catch (error) {
+        if (error.code !== "EEXIST") throw error;
+        return fs.readFileSync(secretPath, "utf8").trim();
+    }
+}
+const AUTH_SECRET = loadAuthSecret();
+if (AUTH_SECRET.length < 32) throw new Error("AUTH_SECRET must be at least 32 characters");
+const AUTH_TOKEN_TTL_SECONDS = 60 * 60 * 24 * 7;
+
+function issueAuthToken(userId) {
+    const payload = Buffer.from(JSON.stringify({
+        sub: userId,
+        exp: Math.floor(Date.now() / 1000) + AUTH_TOKEN_TTL_SECONDS
+    })).toString("base64url");
+    const signature = crypto.createHmac("sha256", AUTH_SECRET).update(payload).digest("base64url");
+    return `${payload}.${signature}`;
+}
+
+function authenticate(req, res, next) {
+    const authorization = req.get("authorization") || "";
+    const match = authorization.match(/^Bearer ([A-Za-z0-9_.-]+)$/);
+    if (!match) return res.status(401).json({ success: false, message: "Authentication required" });
+
+    const [payload, signature, extra] = match[1].split(".");
+    if (!payload || !signature || extra !== undefined) {
+        return res.status(401).json({ success: false, message: "Invalid or expired authentication token" });
+    }
+
+    const expected = crypto.createHmac("sha256", AUTH_SECRET).update(payload).digest();
+    let supplied;
+    try {
+        supplied = Buffer.from(signature, "base64url");
+    } catch {
+        return res.status(401).json({ success: false, message: "Invalid or expired authentication token" });
+    }
+    if (supplied.length !== expected.length || !crypto.timingSafeEqual(supplied, expected)) {
+        return res.status(401).json({ success: false, message: "Invalid or expired authentication token" });
+    }
+
+    try {
+        const claims = JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
+        const user = users.find(candidate => candidate.id === claims.sub);
+        if (!Number.isSafeInteger(claims.sub) || !Number.isSafeInteger(claims.exp) || claims.exp <= Math.floor(Date.now() / 1000) || !user) {
+            return res.status(401).json({ success: false, message: "Invalid or expired authentication token" });
+        }
+        req.authUser = user;
+        next();
+    } catch {
+        return res.status(401).json({ success: false, message: "Invalid or expired authentication token" });
+    }
+}
+
+function authorizeListingOwner(req, res, next) {
+    const id = Number(req.params.id);
+    if (!Number.isSafeInteger(id) || id < 1) {
+        return res.status(400).json({ success: false, message: "Post ID is invalid" });
+    }
+    const post = posts.find(candidate => candidate.postId === id);
+    if (!post) return res.status(404).json({ success: false, message: "Post not found" });
+    if (post.userId !== req.authUser.id) {
+        return res.status(403).json({ success: false, message: "You are not allowed to modify this post" });
+    }
+    req.listing = post;
+    next();
+}
 
 function publicUser(user) {
     const { password, ...safeUser } = user;
     return safeUser;
 }
-
-function hashPassword(password) {
-    const salt = crypto.randomBytes(16).toString("hex");
-    const hash = crypto.scryptSync(password, salt, 64).toString("hex");
-    return `${salt}:${hash}`;
-}
-
-function verifyPassword(password, storedPassword) {
-    const [salt, hash] = String(storedPassword).split(":");
-    if (!salt || !hash) {
-        return false;
-    }
-
-    const passwordHash = crypto.scryptSync(password, salt, 64).toString("hex");
-    return crypto.timingSafeEqual(
-        Buffer.from(hash, "hex"),
-        Buffer.from(passwordHash, "hex")
-    );
-}
-
 
 // =====================================
 // MIDDLEWARE
@@ -40,6 +105,73 @@ function verifyPassword(password, storedPassword) {
 // Project-এর root folder serve করবে
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Listing input is restricted to primitive, allowlisted fields. Text is trimmed,
+// bounded, and rejects markup/control characters before it is persisted.
+const listingFields = new Set([
+    "title", "listingType", "category", "price", "condition",
+    "contact", "location", "description", "image", "components"
+]);
+const listingTypes = new Set(["Sell", "Rent", "Project", "Lost", "Found"]);
+const listingCategories = new Set([
+    "Books", "Notes", "Electronics", "Lab Equipment", "Calculators",
+    "Project Materials", "Others", "Lost & Found"
+]);
+const listingConditions = new Set(["New", "Like New", "Used", "Good", "Unknown", "Lost"]);
+
+function cleanListingText(value, field, maxLength, required = true) {
+    if (typeof value !== "string") throw new Error(`${field} must be text`);
+    const clean = value.trim();
+    if ((required && !clean) || clean.length > maxLength || /[<>\u0000-\u001f\u007f]/.test(clean)) {
+        throw new Error(`${field} is invalid`);
+    }
+    return clean;
+}
+
+function validateListing(req, res, next) {
+    try {
+        const body = req.body;
+        if (!body || typeof body !== "object" || Array.isArray(body)) throw new Error("Request body must be an object");
+        const keys = Object.keys(body);
+        if (keys.some(key => !listingFields.has(key))) throw new Error("Unexpected input field");
+        const updating = req.method === "PUT";
+        const required = updating ? [] : ["title", "listingType", "category", "condition", "contact", "location", "description"];
+        if (required.some(key => !Object.prototype.hasOwnProperty.call(body, key))) throw new Error("Please fill up all required fields");
+        const data = {};
+        for (const [field, limit] of Object.entries({ title: 120, contact: 32, location: 120, description: 3000 })) {
+            if (body[field] !== undefined) data[field] = cleanListingText(body[field], field, limit, !updating || field !== "title");
+        }
+        if (body.components !== undefined) data.components = cleanListingText(body.components, "components", 2000, false);
+        for (const [field, choices] of [["listingType", listingTypes], ["category", listingCategories], ["condition", listingConditions]]) {
+            if (body[field] !== undefined) {
+                const value = cleanListingText(body[field], field, 40);
+                if (!choices.has(value)) throw new Error(`${field} is invalid`);
+                data[field] = value;
+            }
+        }
+        if (body.price !== undefined) {
+            const price = typeof body.price === "number" ? body.price : (typeof body.price === "string" && body.price.trim() !== "" ? Number(body.price) : NaN);
+            if (!Number.isFinite(price) || price < 0 || price > 100000000 || !Number.isSafeInteger(Math.round(price * 100))) throw new Error("price is invalid");
+            data.price = price;
+        } else if (!updating) data.price = 0;
+        if (body.image !== undefined) {
+            const image = cleanListingText(body.image, "image", 2048, false);
+            if (image && (image.length > 2048 || !/^https:\/\//i.test(image))) throw new Error("image must be an HTTPS URL");
+            data.image = image;
+        } else if (!updating) data.image = "";
+        const effectiveListingType = data.listingType || req.listing?.listingType || body.listingType;
+        if (effectiveListingType === "Project") {
+            if (!(data.description ?? req.listing?.description)) throw new Error("Project description is required");
+            if (!(data.components ?? req.listing?.components)) throw new Error("Please list the project components");
+            if (!(data.image ?? req.listing?.image)) throw new Error("A project photo is required");
+            if ((data.price ?? req.listing?.price) === undefined) throw new Error("Project price is required");
+        }
+        req.validatedListing = data;
+        next();
+    } catch (error) {
+        res.status(400).json({ success: false, message: error.message });
+    }
+}
 
 app.use("/css", express.static(path.join(__dirname, "css")));
 app.use("/js", express.static(path.join(__dirname, "js")));
@@ -53,7 +185,7 @@ let users = [
         fullName: "Towsif",
         email: "towsif@example.com",
         studentId: "PUC-1241",
-        password: hashPassword("demo12345"),
+        password: "$argon2id$v=19$m=65536,t=3,p=1$EQQFqezpkRyNZLLvlAv0zg$Bi1+cBFoOn09KItfPBJ7kEURlmewE5I9VANzWPZKApg",
         posts: []
     },
     {
@@ -61,7 +193,7 @@ let users = [
         fullName: "Sadaf",
         email: "sadaf@example.com",
         studentId: "PUC-1242",
-        password: hashPassword("demo12345"),
+        password: "$argon2id$v=19$m=65536,t=3,p=1$GCJSOOaa+CYrxiHR6skewg$hydVOi3/bzOJUmVmdvrJGZ/wXD1c5XCcANuPSFFMrNE",
         posts: []
     }
 ];
@@ -135,7 +267,7 @@ app.get("/", (req, res) => {
     res.redirect("/pages/index.html");
 });
  
-app.post("/api/users", (req, res) => {
+app.post("/api/users", async (req, res) => {
 
     const {
         fullName,
@@ -278,7 +410,7 @@ app.post("/api/users", (req, res) => {
 
         department,
 
-        password: hashPassword(password),
+        password: await hashPassword(password),
 
         profileImage:
             profileImage || "",
@@ -377,7 +509,7 @@ app.get("/api/users/:id", (req, res) => {
 // UPDATE USER - PUT
 // =====================================
 
-app.put("/api/users/:id", (req, res) => {
+app.put("/api/users/:id", async (req, res) => {
 
     const id =
         Number(req.params.id);
@@ -569,7 +701,7 @@ app.put("/api/users/:id", (req, res) => {
 
 
         user.password =
-            hashPassword(password);
+            await hashPassword(password);
 
     }
 
@@ -655,7 +787,7 @@ app.delete("/api/users/:id", (req, res) => {
 // LOGIN
 // =====================================
 
-app.post("/api/login", (req, res) => {
+app.post("/api/login", async (req, res) => {
 
     const {
         email,
@@ -695,8 +827,6 @@ app.post("/api/login", (req, res) => {
 
     if (!user) {
 
-        console.log("USER NOT FOUND");
-
         return res.status(401).json({
 
             success: false,
@@ -713,7 +843,7 @@ app.post("/api/login", (req, res) => {
     // Check password
     // -----------------------------
 
-    if (!verifyPassword(password, user.password)) {
+    if (!await verifyPassword(password, user.password)) {
 
         return res.status(401).json({
 
@@ -759,7 +889,8 @@ app.post("/api/login", (req, res) => {
         message:
             "Login successful",
 
-        user: loggedInUser
+        user: loggedInUser,
+        token: issueAuthToken(user.id)
 
     });
 
@@ -770,154 +901,20 @@ app.post("/api/login", (req, res) => {
 // CREATE POST
 // =====================================
 
-app.post("/api/posts", (req, res) => {
-
-    const {
-        userId,
-        title,
-        listingType,
-        category,
-        price,
-        condition,
-        contact,
-        location,
-        description,
-        image
-    } = req.body;
-
-
-    // -----------------------------
-    // Required field validation
-    // -----------------------------
-
-    if (
-        !userId ||
-        !title ||
-        !listingType ||
-        !category ||
-        !condition ||
-        !contact ||
-        !location ||
-        !description
-    ) {
-
-        return res.status(400).json({
-
-            success: false,
-
-            message:
-                "Please fill up all required fields"
-
-        });
-
-    }
-
-
-    // -----------------------------
-    // Find user
-    // -----------------------------
-
-    const user =
-        users.find(
-            user =>
-                String(user.id) ===
-                String(userId)
-        );
-
-
-    if (!user) {
-
-        return res.status(404).json({
-
-            success: false,
-
-            message:
-                "User not found"
-
-        });
-
-    }
-
-
-    // -----------------------------
-    // Create post
-    // -----------------------------
-
+app.post("/api/posts", authenticate, validateListing, (req, res) => {
+    const data = req.validatedListing;
+    const user = req.authUser;
     const newPost = {
-
-        postId: nextPostId++,
-
-        userId: user.id,
-
-        authorName:
-            user.fullName,
-
-        title,
-
-        listingType,
-
-        category,
-
-        price:
-            Number(price) || 0,
-
-        condition,
-
-        contact,
-
-        location,
-
-        description,
-
-        image:
-            image || "",
-
-        createdAt:
-            new Date().toLocaleString()
-
+        postId: nextPostId++, userId: user.id, authorName: user.fullName,
+        title: data.title, listingType: data.listingType, category: data.category,
+        price: data.price, condition: data.condition, contact: data.contact,
+        location: data.location, description: data.description, image: data.image, components: data.components || "",
+        createdAt: new Date().toLocaleString()
     };
-
-
-    // Add to global posts
     posts.push(newPost);
-
-
-    // -----------------------------
-    // Add post to user
-    // -----------------------------
-
-    if (!Array.isArray(user.posts)) {
-
-        user.posts = [];
-
-    }
-
-
+    if (!Array.isArray(user.posts)) user.posts = [];
     user.posts.push(newPost);
-
-
-    console.log(
-        "New post created:",
-        newPost
-    );
-
-
-    // -----------------------------
-    // Success response
-    // -----------------------------
-
-    res.status(201).json({
-
-        success: true,
-
-        message:
-            "Post created successfully",
-
-        post:
-            newPost
-
-    });
-
+    res.status(201).json({ success: true, message: "Post created successfully", post: newPost });
 });
 
 
@@ -987,146 +984,23 @@ app.get("/api/posts/:id", (req, res) => {
 // UPDATE POST
 // =====================================
 
-app.put("/api/posts/:id", (req, res) => {
+app.put("/api/posts/:id", authenticate, authorizeListingOwner, validateListing, (req, res) => {
 
-    const id =
-        Number(req.params.id);
-
-
-    const postIndex =
-        posts.findIndex(
-            post =>
-                post.postId === id
-        );
+    const id = Number(req.params.id);
+    if (!Number.isSafeInteger(id) || id < 1) return res.status(400).json({ success: false, message: "Post ID is invalid" });
 
 
-    if (postIndex === -1) {
-
-        return res.status(404).json({
-
-            success: false,
-
-            message:
-                "Post not found"
-
-        });
-
-    }
-
-
-    const post =
-        posts[postIndex];
-
-
-    const {
-        userId,
-        title,
-        listingType,
-        category,
-        price,
-        condition,
-        contact,
-        location,
-        description,
-        image
-    } = req.body;
-
-
-    // -----------------------------
-    // Check owner
-    // -----------------------------
-
-    if (
-        String(post.userId) !==
-        String(userId)
-    ) {
-
-        return res.status(403).json({
-
-            success: false,
-
-            message:
-                "You are not allowed to edit this post"
-
-        });
-
-    }
+    const post = req.listing;
+    const postIndex = posts.findIndex(candidate => candidate.postId === id);
+    const changes = req.validatedListing;
 
 
     // -----------------------------
     // Update post
     // -----------------------------
 
-    if (title !== undefined) {
-
-        post.title =
-            title;
-
-    }
-
-
-    if (listingType !== undefined) {
-
-        post.listingType =
-            listingType;
-
-    }
-
-
-    if (category !== undefined) {
-
-        post.category =
-            category;
-
-    }
-
-
-    if (price !== undefined) {
-
-        post.price =
-            Number(price) || 0;
-
-    }
-
-
-    if (condition !== undefined) {
-
-        post.condition =
-            condition;
-
-    }
-
-
-    if (contact !== undefined) {
-
-        post.contact =
-            contact;
-
-    }
-
-
-    if (location !== undefined) {
-
-        post.location =
-            location;
-
-    }
-
-
-    if (description !== undefined) {
-
-        post.description =
-            description;
-
-    }
-
-
-    if (image !== undefined) {
-
-        post.image =
-            image;
-
-    }
+    if (!Object.keys(changes).length) return res.status(400).json({ success: false, message: "No listing fields provided" });
+    Object.assign(post, changes);
 
 
     // -----------------------------
@@ -1193,61 +1067,14 @@ app.put("/api/posts/:id", (req, res) => {
 // DELETE POST
 // =====================================
 
-app.delete("/api/posts/:id", (req, res) => {
+app.delete("/api/posts/:id", authenticate, authorizeListingOwner, (req, res) => {
 
     const id =
         Number(req.params.id);
 
 
-    const postIndex =
-        posts.findIndex(
-            post =>
-                post.postId === id
-        );
-
-
-    if (postIndex === -1) {
-
-        return res.status(404).json({
-
-            success: false,
-
-            message:
-                "Post not found"
-
-        });
-
-    }
-
-
-    const deletedPost =
-        posts[postIndex];
-
-
-    // -----------------------------
-    // Check owner
-    // -----------------------------
-
-    const {
-        userId
-    } = req.body;
-
-
-    if (
-        String(deletedPost.userId) !==
-        String(userId)
-    ) {
-
-        return res.status(403).json({
-
-            success: false,
-
-            message:
-                "You are not allowed to delete this post"
-
-        });
-
-    }
+    const postIndex = posts.findIndex(candidate => candidate.postId === id);
+    const deletedPost = req.listing;
 
 
     // -----------------------------

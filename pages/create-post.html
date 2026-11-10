@@ -28,7 +28,7 @@
             </h1>
 
             <p class="mt-1 text-sm text-gray-500">
-                Sell, Rent, Lost or Found an item on EduTrade
+                Sell, Rent, Project, Lost or Found an item on EduTrade
             </p>
 
         </div>
@@ -83,6 +83,10 @@
 
                         <option value="Rent">
                             Rent
+                        </option>
+
+                        <option value="Project">
+                            Project
                         </option>
 
                         <option value="Lost">
@@ -141,6 +145,7 @@
                             Project Materials
                         </option>
 
+
                         <option value="Others">
                             Others
                         </option>
@@ -160,6 +165,7 @@
                         class="mb-1 block text-sm font-semibold text-gray-700">
 
                         Price (BDT)
+                        <span id="priceRequiredMark" class="hidden text-red-500">*</span>
 
                     </label>
 
@@ -171,7 +177,7 @@
                         class="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
 
                     <p class="mt-1 text-xs text-gray-400">
-                        Not required for Lost / Found
+                        Required for Project listings. Not required for Lost / Found.
                     </p>
 
                 </div>
@@ -261,6 +267,27 @@
             <div>
 
                 <label
+                    for="projectComponents"
+                    class="mb-1 block text-sm font-semibold text-gray-700">
+
+                    Components Included
+                    <span class="text-red-500">*</span>
+
+                </label>
+
+                <textarea
+                    id="projectComponents"
+                    rows="3"
+                    placeholder="List the hardware, software, or materials included in your project"
+                    class="w-full resize-y rounded-lg border border-gray-300 px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500"></textarea>
+
+                <p class="mt-1 text-xs text-gray-400">Required for Project listings.</p>
+
+            </div>
+
+            <div>
+
+                <label
                     for="description"
                     class="mb-1 block text-sm font-semibold text-gray-700">
 
@@ -284,7 +311,8 @@
                     for="productImage"
                     class="mb-1 block text-sm font-semibold text-gray-700">
 
-                    Product Image URL
+                    Project / Product Photo URL
+                    <span id="imageRequiredMark" class="hidden text-red-500">*</span>
 
                 </label>
 
@@ -295,7 +323,7 @@
                     class="w-full rounded-lg border border-gray-300 px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500">
 
                 <p class="mt-1 text-xs text-gray-400">
-                    Paste a direct image URL. Optional.
+                    Paste a direct HTTPS image URL. Required for Project listings.
                 </p>
 
             </div>

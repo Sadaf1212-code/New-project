@@ -47,9 +47,6 @@ registerForm.addEventListener("submit", async function (event) {
         agree: agree
     };
 
-    console.log("Sending data to API:");
-    console.log(userData);
-
     try {
 
         const response = await fetch(
@@ -64,9 +61,6 @@ registerForm.addEventListener("submit", async function (event) {
         );
 
         const data = await response.json();
-
-        console.log("API Response:");
-        console.log(data);
 
         if (!response.ok) {
 

@@ -164,6 +164,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         "No description available."
     );
 
+    if (post.listingType === "Project" && post.components) {
+        setText("postComponents", post.components);
+        document.getElementById("projectComponentsSection")?.classList.remove("hidden");
+    }
+
 
     setText(
         "pickupLocation",
@@ -207,7 +212,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 "bg-red-100 text-red-700",
 
             Found:
-                "bg-purple-100 text-purple-700"
+                "bg-purple-100 text-purple-700",
+            Project:
+                "bg-indigo-100 text-indigo-700"
         };
 
 

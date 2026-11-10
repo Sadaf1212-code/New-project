@@ -25,6 +25,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const editPostId =
         localStorage.getItem("editPostId");
 
+    const listingTypeInput = document.getElementById("listingType");
+    const componentsInput = document.getElementById("projectComponents");
+    const priceInput = document.getElementById("price");
+    const imageInput = document.getElementById("productImage");
+    const imageRequiredMark = document.getElementById("imageRequiredMark");
+    const priceRequiredMark = document.getElementById("priceRequiredMark");
+
+    function updateProjectRequirements() {
+        const isProject = listingTypeInput.value === "Project";
+        componentsInput.required = isProject;
+        priceInput.required = isProject;
+        imageInput.required = isProject;
+        imageRequiredMark.classList.toggle("hidden", !isProject);
+        priceRequiredMark.classList.toggle("hidden", !isProject);
+    }
+
+    listingTypeInput.addEventListener("change", updateProjectRequirements);
+    updateProjectRequirements();
+
     async function loadEditPost() {
 
         if (!editPostId) {
@@ -127,6 +146,9 @@ document.addEventListener("DOMContentLoaded", () => {
             ).value =
                 post.image || "";
 
+            componentsInput.value = post.components || "";
+            updateProjectRequirements();
+
             const heading =
                 document.querySelector("h1");
 
@@ -211,6 +233,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     "productImage"
                 ).value.trim();
 
+            const components = componentsInput.value.trim();
+
             if (
                 !title ||
                 !listingType ||
@@ -218,7 +242,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 !condition ||
                 !contact ||
                 !location ||
-                !description
+                !description ||
+                (listingType === "Project" && (!components || !image || !price))
             ) {
 
                 alert(
@@ -229,10 +254,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             const postData = {
-
-                userId:
-                    currentUser.id,
-
                 title:
                     title,
 
@@ -257,6 +278,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 description:
                     description,
 
+                components:
+                    components,
+
                 image:
                     image
             };
@@ -280,7 +304,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
                                 headers: {
                                     "Content-Type":
-                                        "application/json"
+                                        "application/json",
+                                    "Authorization":
+                                        `Bearer ${localStorage.getItem("authToken") || ""}`
                                 },
 
                                 body:
@@ -300,7 +326,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
                                 headers: {
                                     "Content-Type":
-                                        "application/json"
+                                        "application/json",
+                                    "Authorization":
+                                        `Bearer ${localStorage.getItem("authToken") || ""}`
                                 },
 
                                 body:
@@ -320,6 +348,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
 
                 if (!response.ok) {
+
+                    if (response.status === 401) {
+                        localStorage.removeItem("currentUser");
+                        localStorage.removeItem("authToken");
+                        alert("Your login session expired. Please sign in again.");
+                        window.location.href = "login.html";
+                        return;
+                    }
 
                     alert(
                         data.message ||

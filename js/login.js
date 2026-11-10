@@ -48,8 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const data = await response.json();
 
-            console.log("Login API Response:", data);
-
             if (!response.ok) {
 
                 window.location.href =
@@ -69,6 +67,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 "currentUser",
                 JSON.stringify(data.user)
             );
+
+            localStorage.setItem("authToken", data.token);
 
             if (rememberMe) {
 
