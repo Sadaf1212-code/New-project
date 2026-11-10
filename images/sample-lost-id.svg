@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-labelledby="title">
+  <title id="title">Student identity card</title>
+  <rect width="800" height="500" rx="28" fill="#fff7ed"/>
+  <circle cx="657" cy="103" r="67" fill="#fed7aa"/><circle cx="132" cy="399" r="76" fill="#ffedd5"/>
+  <g transform="rotate(4 400 250)">
+    <rect x="196" y="121" width="408" height="260" rx="24" fill="#fff" stroke="#fdba74" stroke-width="8"/>
+    <rect x="196" y="121" width="408" height="62" rx="22" fill="#f97316"/>
+    <rect x="196" y="158" width="408" height="25" fill="#f97316"/>
+    <circle cx="304" cy="253" r="48" fill="#ffedd5"/>
+    <circle cx="304" cy="238" r="19" fill="#fb923c"/>
+    <path d="M269 281c6-24 64-24 70 0" fill="#fb923c"/>
+    <rect x="378" y="222" width="174" height="15" rx="7" fill="#cbd5e1"/><rect x="378" y="252" width="145" height="12" rx="6" fill="#e2e8f0"/><rect x="378" y="280" width="162" height="12" rx="6" fill="#e2e8f0"/>
+    <text x="400" y="162" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="22" font-weight="700">STUDENT ID</text>
+    <rect x="264" y="321" width="272" height="8" rx="4" fill="#fed7aa"/>
+  </g>
+  <text x="400" y="450" text-anchor="middle" fill="#9a3412" font-family="Arial,sans-serif" font-size="24" font-weight="700">LOST &amp; FOUND</text>
+</svg>

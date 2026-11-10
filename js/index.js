@@ -154,8 +154,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="w-full h-48 bg-gray-100">
 
                         <img
-                            src="${escapeHtml(post.image || "../images/default-product.jpg")}"
+                            src="${escapeHtml(post.image || "/images/default-product.svg")}"
                             alt="${escapeHtml(post.title || "Product") }"
+                            onerror="this.onerror=null;this.src='/images/default-product.svg'"
                             class="w-full h-full object-cover"
                         >
 

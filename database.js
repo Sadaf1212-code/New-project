@@ -11,7 +11,7 @@ const samplePosts = [
         contact: "01700000000",
         location: "Chittagong",
         description: "CSE textbooks available.",
-        image: "",
+        image: "/images/sample-books.svg",
         components: "",
         authorName: "EduTrade"
     },
@@ -25,7 +25,7 @@ const samplePosts = [
         contact: "01800000000",
         location: "Premier University",
         description: "Scientific calculator for rent.",
-        image: "",
+        image: "/images/sample-calculator.svg",
         components: "",
         authorName: "EduTrade"
     },
@@ -39,7 +39,7 @@ const samplePosts = [
         contact: "01800000000",
         location: "Campus",
         description: "University ID card lost.",
-        image: "",
+        image: "/images/sample-lost-id.svg",
         components: "",
         authorName: "EduTrade"
     }
@@ -91,7 +91,8 @@ async function initialize(currentSql) {
                 (author_name, title, listing_type, category, price, condition,
                  contact, location, description, image, components, seed_key)
              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-             ON CONFLICT (seed_key) DO NOTHING`,
+             ON CONFLICT (seed_key) DO UPDATE SET image = EXCLUDED.image
+             WHERE COALESCE(posts.image, '') = ''`,
             [post.authorName, post.title, post.listingType, post.category,
                 post.price, post.condition, post.contact, post.location,
                 post.description, post.image, post.components, post.key]

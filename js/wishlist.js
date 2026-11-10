@@ -287,7 +287,7 @@ function createWishlistCard(
     // IMAGE
     // =====================================
 
-    const image = escapeHtml(post.image || "../images/default-product.jpg");
+    const image = escapeHtml(post.image || "/images/default-product.svg");
 
 
     // =====================================
@@ -303,6 +303,7 @@ function createWishlistCard(
             <img
                 src="${image}"
                 alt="${escapeHtml(post.title || "Product") }"
+                onerror="this.onerror=null;this.src='/images/default-product.svg'"
                 class="w-full h-full object-cover"
             >
 

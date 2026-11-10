@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         image.src =
             post.image ||
-            "../images/default-product.jpg";
+            "/images/default-product.svg";
 
 
         image.alt =
@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         image.onerror = () => {
 
             image.src =
-                "../images/default-product.jpg";
+                "/images/default-product.svg";
         };
     }
 

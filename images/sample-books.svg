@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-labelledby="title">
+  <title id="title">Stack of study books</title>
+  <rect width="800" height="500" rx="28" fill="#eff6ff"/>
+  <circle cx="650" cy="95" r="70" fill="#dbeafe"/>
+  <ellipse cx="400" cy="390" rx="230" ry="28" fill="#cbd5e1" opacity=".55"/>
+  <g transform="rotate(-5 400 300)">
+    <rect x="205" y="305" width="390" height="74" rx="12" fill="#2563eb"/><rect x="235" y="321" width="305" height="10" rx="5" fill="#bfdbfe"/><rect x="235" y="344" width="220" height="8" rx="4" fill="#93c5fd"/>
+    <rect x="235" y="228" width="370" height="72" rx="12" fill="#16a34a"/><rect x="263" y="245" width="280" height="10" rx="5" fill="#bbf7d0"/><rect x="263" y="268" width="200" height="8" rx="4" fill="#86efac"/>
+    <rect x="190" y="151" width="390" height="72" rx="12" fill="#f59e0b"/><rect x="220" y="168" width="290" height="10" rx="5" fill="#fef3c7"/><rect x="220" y="190" width="205" height="8" rx="4" fill="#fde68a"/>
+  </g>
+  <text x="400" y="445" text-anchor="middle" fill="#1e3a8a" font-family="Arial,sans-serif" font-size="25" font-weight="700">STUDY BOOKS</text>
+</svg>

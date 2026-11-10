@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-labelledby="title">
+  <title id="title">Scientific calculator</title>
+  <rect width="800" height="500" rx="28" fill="#ecfeff"/>
+  <circle cx="145" cy="115" r="67" fill="#cffafe"/><circle cx="662" cy="386" r="90" fill="#d1fae5"/>
+  <g transform="rotate(-8 400 260)">
+    <rect x="285" y="80" width="230" height="340" rx="26" fill="#334155"/>
+    <rect x="310" y="111" width="180" height="77" rx="9" fill="#d9f99d"/>
+    <text x="475" y="162" text-anchor="end" fill="#365314" font-family="monospace" font-size="35">123.45</text>
+    <g fill="#e2e8f0">
+      <rect x="310" y="214" width="48" height="42" rx="8"/><rect x="373" y="214" width="48" height="42" rx="8"/><rect x="436" y="214" width="48" height="42" rx="8"/>
+      <rect x="310" y="271" width="48" height="42" rx="8"/><rect x="373" y="271" width="48" height="42" rx="8"/><rect x="436" y="271" width="48" height="42" rx="8"/>
+      <rect x="310" y="328" width="48" height="42" rx="8"/><rect x="373" y="328" width="48" height="42" rx="8"/><rect x="436" y="328" width="48" height="42" rx="8"/>
+    </g>
+    <g fill="#334155" font-family="Arial,sans-serif" font-size="19" font-weight="700" text-anchor="middle"><text x="334" y="242">7</text><text x="397" y="242">8</text><text x="460" y="242">9</text><text x="334" y="299">4</text><text x="397" y="299">5</text><text x="460" y="299">6</text><text x="334" y="356">1</text><text x="397" y="356">2</text><text x="460" y="356">3</text></g>
+  </g>
+  <text x="400" y="466" text-anchor="middle" fill="#155e75" font-family="Arial,sans-serif" font-size="24" font-weight="700">SCIENTIFIC CALCULATOR</text>
+</svg>

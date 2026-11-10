@@ -380,7 +380,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // =================================
 
         const image =
-            escapeHtml(post.image || "../images/anas.jpeg");
+            escapeHtml(post.image || "/images/default-product.svg");
 
 
         // =================================
@@ -404,10 +404,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     class="w-full
                            h-full
                            object-cover"
-                    onerror="
-                        this.src =
-                        '../images/default-product.jpg'
-                    "
+                    onerror="this.onerror=null;this.src='/images/default-product.svg'"
                 >
 
             </div>

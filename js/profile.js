@@ -319,7 +319,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 "border-gray-200 bg-white shadow-sm";
 
 
-            const image = escapeHtml(post.image || "https://via.placeholder.com/400x250?text=EduTrade");
+            const image = escapeHtml(post.image || "/images/default-product.svg");
 
 
             card.innerHTML = `
@@ -327,6 +327,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 <img
                     src="${image}"
                     alt="${escapeHtml(post.title || "Post") }"
+                    onerror="this.onerror=null;this.src='/images/default-product.svg'"
                     class="h-44 w-full object-cover"
                 >
 
