@@ -644,10 +644,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // WISHLIST CHECK
         // =================================
 
-        const wishlist =
-            JSON.parse(
-                localStorage.getItem("wishlist")
-            ) || [];
+        const wishlist = getWishlistIds();
 
 
         const isWishlisted =
@@ -977,10 +974,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function toggleWishlist(postId) {
 
-        let wishlist =
-            JSON.parse(
-                localStorage.getItem("wishlist")
-            ) || [];
+        let wishlist = getWishlistIds();
 
 
         const exists =
@@ -1009,10 +1003,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
-        localStorage.setItem(
-            "wishlist",
-            JSON.stringify(wishlist)
-        );
+        saveWishlistIds(wishlist);
 
 
         // Re-render cards
@@ -1188,10 +1179,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Remove from wishlist too
 
-            let wishlist =
-                JSON.parse(
-                    localStorage.getItem("wishlist")
-                ) || [];
+            let wishlist = getWishlistIds();
 
 
             wishlist =
@@ -1202,10 +1190,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
 
 
-            localStorage.setItem(
-                "wishlist",
-                JSON.stringify(wishlist)
-            );
+            saveWishlistIds(wishlist);
 
 
             alert(

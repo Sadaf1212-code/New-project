@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         alert("Post not found!");
 
         window.location.href =
-            "marketplace.html";
+            "market-place.html";
 
         return;
     }
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
         window.location.href =
-            "marketplace.html";
+            "market-place.html";
 
         return;
     }
@@ -281,12 +281,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (saveButton) {
 
         function getWishlist() {
-
-            return JSON.parse(
-                localStorage.getItem(
-                    "wishlist"
-                )
-            ) || [];
+            return getWishlistIds();
         }
 
 
@@ -298,9 +293,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const saved =
                 wishlist.some(
-                    item =>
-                        String(item.postId) ===
-                        String(postId)
+                    item => String(item) === String(postId)
                 );
 
 
@@ -323,17 +316,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                     getWishlist();
 
 
-                const index =
-                    wishlist.findIndex(
-                        item =>
-                            String(item.postId) ===
-                            String(postId)
-                    );
+                    const index = wishlist.findIndex(item => String(item) === String(postId));
 
 
                 if (index === -1) {
 
-                    wishlist.push(post);
+                    wishlist.push(postId);
 
                 } else {
 
@@ -344,10 +332,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
 
 
-                localStorage.setItem(
-                    "wishlist",
-                    JSON.stringify(wishlist)
-                );
+                saveWishlistIds(wishlist);
 
 
                 renderSaveState();

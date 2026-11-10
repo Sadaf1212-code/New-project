@@ -3,6 +3,45 @@ const escapeHtml = value => String(value ?? "").replace(/[&<>\"']/g, character =
     "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;"
 })[character]);
 
+function getWishlistIds() {
+    let stored = [];
+    try {
+        const parsed = JSON.parse(localStorage.getItem("wishlist") || "[]");
+        if (Array.isArray(parsed)) stored = parsed;
+    } catch (error) {
+        console.error("Wishlist data is invalid", error);
+    }
+
+    return [...new Set(stored
+        .map(item => item && typeof item === "object" ? item.postId : item)
+        .filter(id => id !== null && id !== undefined && /^\d+$/.test(String(id)))
+        .map(String))];
+}
+
+function updateWishlistCount(ids = getWishlistIds()) {
+    const count = ids.length;
+    ["wishlistCount", "mobileWishlistCount", "wishlistPageCount"].forEach(id => {
+        const element = document.getElementById(id);
+        if (!element) return;
+        element.textContent = count;
+        if (id !== "wishlistPageCount") element.classList.toggle("hidden", count === 0);
+    });
+}
+
+function saveWishlistIds(ids) {
+    const normalized = [...new Set((Array.isArray(ids) ? ids : [])
+        .map(item => item && typeof item === "object" ? item.postId : item)
+        .filter(id => id !== null && id !== undefined && /^\d+$/.test(String(id)))
+        .map(String))];
+    localStorage.setItem("wishlist", JSON.stringify(normalized));
+    updateWishlistCount(normalized);
+    return normalized;
+}
+
+window.addEventListener("storage", event => {
+    if (event.key === "wishlist") updateWishlistCount();
+});
+
 document.addEventListener("DOMContentLoaded", () => {
 
     const container =
@@ -234,49 +273,7 @@ function initializeNavbar() {
     }
 
 
-    // ===============================
-    // WISHLIST COUNT
-    // ===============================
-
-    let wishlist = [];
-
-    try {
-
-        wishlist =
-            JSON.parse(
-                localStorage.getItem("wishlist")
-            ) || [];
-
-    } catch (error) {
-
-        console.error(
-            "Wishlist data is invalid",
-            error
-        );
-
-    }
-
-
-    [
-        "wishlistCount",
-        "mobileWishlistCount"
-    ].forEach(id => {
-
-        const count =
-            document.getElementById(id);
-
-        if (count) {
-
-            count.textContent =
-                wishlist.length;
-
-            count.classList.toggle(
-                "hidden",
-                wishlist.length === 0
-            );
-        }
-
-    });
+    updateWishlistCount();
 
 }
  

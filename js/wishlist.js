@@ -31,7 +31,7 @@ function loadWishlist() {
         document.getElementById("errorText");
 
     const wishlistCount =
-        document.getElementById("wishlistCount");
+        document.getElementById("wishlistPageCount");
 
 
     // =====================================
@@ -47,14 +47,9 @@ function loadWishlist() {
     // GET WISHLIST IDS
     // =====================================
 
-    const wishlist =
-        JSON.parse(
-            localStorage.getItem("wishlist")
-        ) || [];
-
-
-    wishlistCount.textContent =
-        wishlist.length;
+    const wishlist = getWishlistIds();
+    wishlistCount.textContent = wishlist.length;
+    updateWishlistCount(wishlist);
 
 
     // =====================================
@@ -138,6 +133,7 @@ function loadWishlist() {
 
                 wishlistContainer.classList.add("hidden");
 
+                saveWishlistIds([]);
                 wishlistCount.textContent = "0";
 
                 return;
@@ -148,8 +144,9 @@ function loadWishlist() {
             // UPDATE COUNT
             // =====================================
 
-            wishlistCount.textContent =
-                wishlistPosts.length;
+            const validWishlistIds = wishlistPosts.map(post => post.postId);
+            saveWishlistIds(validWishlistIds);
+            wishlistCount.textContent = validWishlistIds.length;
 
 
             // =====================================
@@ -471,10 +468,7 @@ function createWishlistCard(
 
 function addToWishlist(postId) {
 
-    let wishlist =
-        JSON.parse(
-            localStorage.getItem("wishlist")
-        ) || [];
+    let wishlist = getWishlistIds();
 
 
     // =====================================
@@ -509,10 +503,7 @@ function addToWishlist(postId) {
     // SAVE
     // =====================================
 
-    localStorage.setItem(
-        "wishlist",
-        JSON.stringify(wishlist)
-    );
+    saveWishlistIds(wishlist);
 
 
     alert(
@@ -529,10 +520,7 @@ function addToWishlist(postId) {
 
 function removeFromWishlist(postId) {
 
-    let wishlist =
-        JSON.parse(
-            localStorage.getItem("wishlist")
-        ) || [];
+    let wishlist = getWishlistIds();
 
 
     // =====================================
@@ -550,10 +538,7 @@ function removeFromWishlist(postId) {
     // SAVE
     // =====================================
 
-    localStorage.setItem(
-        "wishlist",
-        JSON.stringify(wishlist)
-    );
+    saveWishlistIds(wishlist);
 
 
     // =====================================
