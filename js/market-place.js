@@ -1,6 +1,14 @@
  
 document.addEventListener("DOMContentLoaded", () => {
 
+    const escapeHtml = value => String(value ?? "").replace(/[&<>\"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        "\"": "&quot;",
+        "'": "&#39;"
+    })[character]);
+
     // =====================================
     // 1. ELEMENTS
     // =====================================
@@ -619,9 +627,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // IMAGE
         // =================================
 
-        const image =
-            post.image ||
-            "../images/default-product.jpg";
+        const image = escapeHtml(post.image || "../images/default-product.jpg");
 
 
         // =================================
@@ -766,7 +772,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 <img
                     src="${image}"
-                    alt="${post.title || "Product"}"
+                    alt="${escapeHtml(post.title || "Product") }"
                     class="w-full
                            h-full
                            object-cover"
@@ -805,7 +811,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                font-semibold"
                     >
 
-                        ${post.listingType || "Unknown"}
+                        ${escapeHtml(post.listingType || "Unknown")}
 
                     </span>
 
@@ -815,7 +821,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                text-gray-400"
                     >
 
-                        ${post.category || "Others"}
+                        ${escapeHtml(post.category || "Others")}
 
                     </span>
 
@@ -831,7 +837,7 @@ document.addEventListener("DOMContentLoaded", () => {
                            line-clamp-1"
                 >
 
-                    ${post.title || "Untitled Post"}
+                    ${escapeHtml(post.title || "Untitled Post")}
 
                 </h3>
 
@@ -846,8 +852,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 >
 
                     ${
-                        post.description ||
-                        "No description"
+                        escapeHtml(post.description || "No description")
                     }
 
                 </p>
@@ -871,7 +876,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 >
 
                     Condition:
-                    ${post.condition || "Unknown"}
+                    ${escapeHtml(post.condition || "Unknown")}
 
                 </p>
 
@@ -885,7 +890,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 >
 
                     📍
-                    ${post.location || "Unknown"}
+                    ${escapeHtml(post.location || "Unknown")}
 
                 </p>
 
@@ -899,7 +904,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 >
 
                     👤
-                    ${post.authorName || "Unknown User"}
+                    ${escapeHtml(post.authorName || "Unknown User")}
 
                 </p>
 
@@ -913,7 +918,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 >
 
                     📞
-                    ${post.contact || "Not available"}
+                    ${escapeHtml(post.contact || "Not available")}
 
                 </p>
 
@@ -926,7 +931,7 @@ document.addEventListener("DOMContentLoaded", () => {
                            mt-2"
                 >
 
-                    ${post.createdAt || ""}
+                    ${escapeHtml(post.createdAt || "")}
 
                 </p>
 

@@ -1,6 +1,10 @@
  
 document.addEventListener("DOMContentLoaded", () => {
 
+    const escapeHtml = value => String(value ?? "").replace(/[&<>\"']/g, character => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;"
+    })[character]);
+
     // =====================================
     // ELEMENTS
     // =====================================
@@ -150,8 +154,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="w-full h-48 bg-gray-100">
 
                         <img
-                            src="${post.image || "../images/default-product.jpg"}"
-                            alt="${post.title}"
+                            src="${escapeHtml(post.image || "../images/default-product.jpg")}"
+                            alt="${escapeHtml(post.title || "Product") }"
                             class="w-full h-full object-cover"
                         >
 
@@ -174,14 +178,14 @@ document.addEventListener("DOMContentLoaded", () => {
                                 text-xs
                                 font-semibold">
 
-                                ${post.listingType}
+                                ${escapeHtml(post.listingType || "Unknown")}
 
                             </span>
 
 
                             <span class="text-xs text-gray-400">
 
-                                ${post.category}
+                                ${escapeHtml(post.category || "Others")}
 
                             </span>
 
@@ -193,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <h3
                             class="text-lg font-bold text-gray-800 line-clamp-1">
 
-                            ${post.title}
+                            ${escapeHtml(post.title || "Untitled")}
 
                         </h3>
 
@@ -203,7 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <p
                             class="text-sm text-gray-500 mt-2 line-clamp-2">
 
-                            ${post.description}
+                            ${escapeHtml(post.description || "")}
 
                         </p>
 
@@ -221,7 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                         <p class="text-sm text-gray-500 mt-2">
 
-                            📍 ${post.location}
+                            📍 ${escapeHtml(post.location || "Unknown")}
 
                         </p>
 
@@ -230,7 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                         <p class="text-sm text-gray-500 mt-1">
 
-                            👤 ${post.authorName}
+                            👤 ${escapeHtml(post.authorName || "Unknown User")}
 
                         </p>
 

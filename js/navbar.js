@@ -1,6 +1,10 @@
  
 document.addEventListener("DOMContentLoaded", () => {
 
+    const escapeHtml = value => String(value ?? "").replace(/[&<>\"']/g, character => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;"
+    })[character]);
+
     const container =
         document.querySelector("[data-navbar]") ||
         document.getElementById("navbar-placeholder");
@@ -110,12 +114,12 @@ function initializeNavbar() {
 
                 <a
                     href="profile.html"
-                    title="${currentUser.fullName || "Profile"}"
+                    title="${escapeHtml(currentUser.fullName || "Profile") }"
                     class="flex h-9 w-9 items-center justify-center
                     rounded-full border border-blue-200
                     bg-blue-100 font-bold text-blue-600"
                 >
-                    ${initial}
+                    ${escapeHtml(initial)}
                 </a>
 
                 <button
@@ -139,7 +143,7 @@ function initializeNavbar() {
                     href="profile.html"
                     class="mobile-nav-link"
                 >
-                    Profile (${currentUser.fullName || "User"})
+                    Profile (${escapeHtml(currentUser.fullName || "User")})
                 </a>
 
                 <button

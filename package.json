@@ -12,8 +12,8 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@neondatabase/serverless": "^1.2.0",
     "argon2": "^0.45.2",
-    "cors": "^2.8.6",
     "dotenv": "^18.0.3",
     "express": "^5.2.1"
   },

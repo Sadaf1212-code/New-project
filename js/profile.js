@@ -1,5 +1,9 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
+    const escapeHtml = value => String(value ?? "").replace(/[&<>\"']/g, character => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;"
+    })[character]);
+
     // =====================================
     // 1. GET CURRENT USER
     // =====================================
@@ -315,16 +319,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                 "border-gray-200 bg-white shadow-sm";
 
 
-            const image =
-                post.image ||
-                "https://via.placeholder.com/400x250?text=EduTrade";
+            const image = escapeHtml(post.image || "https://via.placeholder.com/400x250?text=EduTrade");
 
 
             card.innerHTML = `
 
                 <img
                     src="${image}"
-                    alt="${post.title || "Post"}"
+                    alt="${escapeHtml(post.title || "Post") }"
                     class="h-44 w-full object-cover"
                 >
 
@@ -340,13 +342,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                             px-3 py-1 text-xs
                             font-semibold text-green-700"
                         >
-                            ${post.listingType || "Post"}
+                            ${escapeHtml(post.listingType || "Post")}
                         </span>
 
                         <span
                             class="text-sm text-gray-500"
                         >
-                            ${post.category || ""}
+                            ${escapeHtml(post.category || "")}
                         </span>
 
                     </div>
@@ -355,7 +357,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <h3
                         class="line-clamp-2 text-lg font-bold"
                     >
-                        ${post.title || "Untitled Post"}
+                        ${escapeHtml(post.title || "Untitled Post")}
                     </h3>
 
 
@@ -366,7 +368,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                                     class="mt-2 font-semibold
                                     text-green-700"
                                 >
-                                    ৳ ${post.price}
+                                    ৳ ${Number(post.price) || 0}
                                 </p>
                               `
                             : ""
@@ -378,8 +380,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         text-sm text-gray-500"
                     >
                         ${
-                            post.description ||
-                            "No description available."
+                            escapeHtml(post.description || "No description available.")
                         }
                     </p>
 
@@ -555,12 +556,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 fullName:
                     editName.value.trim(),
 
-                email:
-                    user.email,
-
-                studentId:
-                    user.studentId,
-
                 phone:
                     editPhone.value.trim(),
 
@@ -595,7 +590,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                             headers: {
                                 "Content-Type":
-                                    "application/json"
+                                    "application/json",
+                                "Authorization":
+                                    `Bearer ${localStorage.getItem("authToken") || ""}`
                             },
 
                             body:

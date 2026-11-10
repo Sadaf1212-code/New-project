@@ -1,4 +1,10 @@
  
+function escapeHtml(value) {
+    return String(value ?? "").replace(/[&<>\"']/g, character => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;"
+    })[character]);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
 
     loadWishlist();
@@ -284,9 +290,7 @@ function createWishlistCard(
     // IMAGE
     // =====================================
 
-    const image =
-        post.image ||
-        "../images/default-product.jpg";
+    const image = escapeHtml(post.image || "../images/default-product.jpg");
 
 
     // =====================================
@@ -301,7 +305,7 @@ function createWishlistCard(
 
             <img
                 src="${image}"
-                alt="${post.title || "Product"}"
+                alt="${escapeHtml(post.title || "Product") }"
                 class="w-full h-full object-cover"
             >
 
@@ -345,14 +349,14 @@ function createWishlistCard(
                     text-xs
                     font-semibold">
 
-                    ${post.listingType}
+                    ${escapeHtml(post.listingType || "Unknown")}
 
                 </span>
 
 
                 <span class="text-xs text-gray-400">
 
-                    ${post.category || "Others"}
+                    ${escapeHtml(post.category || "Others")}
 
                 </span>
 
@@ -365,7 +369,7 @@ function createWishlistCard(
             <h3
                 class="text-lg font-bold text-gray-800 line-clamp-1">
 
-                ${post.title || "Untitled Post"}
+                ${escapeHtml(post.title || "Untitled Post")}
 
             </h3>
 
@@ -376,7 +380,7 @@ function createWishlistCard(
             <p
                 class="text-sm text-gray-500 mt-2 line-clamp-2">
 
-                ${post.description || "No description available."}
+                ${escapeHtml(post.description || "No description available.")}
 
             </p>
 
@@ -396,7 +400,7 @@ function createWishlistCard(
 
             <p class="text-sm text-gray-500 mt-2">
 
-                📍 ${post.location || "Not provided"}
+                📍 ${escapeHtml(post.location || "Not provided")}
 
             </p>
 
@@ -406,7 +410,7 @@ function createWishlistCard(
 
             <p class="text-sm text-gray-500 mt-1">
 
-                👤 ${post.authorName || "Unknown"}
+                👤 ${escapeHtml(post.authorName || "Unknown")}
 
             </p>
 
