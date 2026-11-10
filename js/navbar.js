@@ -1,9 +1,9 @@
  
-document.addEventListener("DOMContentLoaded", () => {
+const escapeHtml = value => String(value ?? "").replace(/[&<>\"']/g, character => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;"
+})[character]);
 
-    const escapeHtml = value => String(value ?? "").replace(/[&<>\"']/g, character => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;"
-    })[character]);
+document.addEventListener("DOMContentLoaded", () => {
 
     const container =
         document.querySelector("[data-navbar]") ||
@@ -115,11 +115,12 @@ function initializeNavbar() {
                 <a
                     href="profile.html"
                     title="${escapeHtml(currentUser.fullName || "Profile") }"
-                    class="flex h-9 w-9 items-center justify-center
-                    rounded-full border border-blue-200
-                    bg-blue-100 font-bold text-blue-600"
+                    class="flex items-center gap-2 text-sm font-semibold text-gray-700 hover:text-green-600"
                 >
-                    ${escapeHtml(initial)}
+                    <span class="flex h-9 w-9 items-center justify-center rounded-full border border-blue-200 bg-blue-100 font-bold text-blue-600">
+                        ${escapeHtml(initial)}
+                    </span>
+                    <span>Profile</span>
                 </a>
 
                 <button
